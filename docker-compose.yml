@@ -1,0 +1,66 @@
+version: "2"
+
+services:
+    mqtt_broker:
+        extends:
+            file: mqtt_broker/app.yml
+            service: app
+        restart: unless-stopped
+        logging:
+            driver: syslog
+            options:
+                tag: docker-mqtt-broker
+        networks:
+            internal:
+                aliases:
+                    - mqtt.docker.local
+    timeseries-db:
+        extends:
+            file: timeseries_sds/app.yml
+            service: db
+        networks:
+            internal:
+                aliases:
+                    - timeseries-db.docker.local
+        logging:
+            driver: syslog
+            options:
+                tag: docker-timeseries-db
+        restart: unless-stopped
+        depends_on:
+            - "mqtt_broker"
+    timeseries-db-input:
+        extends:
+            file: timeseries_sds/app.yml
+            service: telegraf
+        networks:
+            internal:
+                aliases:
+                    - timeseries-input.docker.local
+        logging:
+            driver: syslog
+            options:
+                tag: docker-timeseries-input
+        restart: unless-stopped
+        depends_on:
+            - "timeseries-db"
+            - "mqtt_broker"
+    dashboard:
+        extends:
+            file: dashboard_ui/app.yml
+            service: app
+        networks:
+            internal:
+                aliases:
+                    - dashboard-ui.docker.local
+        logging:
+            driver: syslog
+            options:
+                tag: docker-dashboard-ui
+        restart: unless-stopped
+        depends_on:
+            - "mqtt_broker"
+
+networks:
+     internal:
+         name: shoestring-internal
