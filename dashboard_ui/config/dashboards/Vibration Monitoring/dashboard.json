@@ -339,18 +339,22 @@
           "text": "machine_1",
           "value": "machine_1"
         },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "influxdb"
+        },
+        "definition": "from(bucket: \"vibration_monitoring\")\n  |> range(start: -7d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vibration_reading\")\n  |> keep(columns: [\"id\"])\n  |> distinct(column: \"id\")\n  |> filter(fn: (r) => r[\"id\"] != \"null\")\n  |> group()",
         "hide": 0,
+        "includeAll": false,
+        "multi": false,
         "name": "machine",
-        "options": [
-          {
-            "selected": true,
-            "text": "machine_1",
-            "value": "machine_1"
-          }
-        ],
-        "query": "machine_1",
+        "options": [],
+        "query": "from(bucket: \"vibration_monitoring\")\n  |> range(start: -7d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vibration_reading\")\n  |> keep(columns: [\"id\"])\n  |> distinct(column: \"id\")\n  |> filter(fn: (r) => r[\"id\"] != \"null\")\n  |> group()",
+        "refresh": 1,
+        "regex": "",
         "skipUrlSync": false,
-        "type": "textbox"
+        "sort": 0,
+        "type": "query"
       }
     ]
   },
@@ -362,6 +366,6 @@
   "timezone": "",
   "title": "Vibration & Temperature Dashboard",
   "uid": "70aiGq34k",
-  "version": 6,
+  "version": 9,
   "weekStart": ""
 }
