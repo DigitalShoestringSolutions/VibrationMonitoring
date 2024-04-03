@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 4,
+  "id": 2,
   "links": [],
   "liveNow": true,
   "panels": [
@@ -111,11 +111,11 @@
             "type": "influxdb",
             "uid": "influxdb"
           },
-          "query": "from(bucket: \"vibration_monitoring\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vibration_reading\")\n  |> filter(fn: (r) => r[\"_field\"] == \"acceleration\")\n  ",
+          "query": "from(bucket: \"vibration_monitoring\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vibration_reading\")\n  |> filter(fn: (r) => r[\"_field\"] == \"acceleration\")\n    |> filter(fn: (r) => r[\"id\"] == \"${machine}\")\n\n  ",
           "refId": "A"
         }
       ],
-      "title": "RMS Acceleration",
+      "title": "RMS Acceleration | ${machine}",
       "type": "timeseries"
     },
     {
@@ -176,11 +176,11 @@
             "type": "influxdb",
             "uid": "influxdb"
           },
-          "query": "from(bucket: \"vibration_monitoring\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vibration_reading\")\n  |> filter(fn: (r) => r[\"_field\"] == \"peakFrequency\")\n  ",
+          "query": "from(bucket: \"vibration_monitoring\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vibration_reading\")\n  |> filter(fn: (r) => r[\"_field\"] == \"peakFrequency\")\n  |> filter(fn: (r) => r[\"id\"] == \"${machine}\")\n\n  ",
           "refId": "A"
         }
       ],
-      "title": "Peak Frequency",
+      "title": "Peak Frequency | ${machine}",
       "type": "stat"
     },
     {
@@ -205,7 +205,7 @@
               },
               {
                 "color": "red",
-                "value": 80
+                "value": 50
               }
             ]
           },
@@ -241,11 +241,11 @@
             "type": "influxdb",
             "uid": "influxdb"
           },
-          "query": "from(bucket: \"vibration_monitoring\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vibration_reading\")\n  |> filter(fn: (r) => r[\"_field\"] == \"temperature\")\n  ",
+          "query": "from(bucket: \"vibration_monitoring\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vibration_reading\")\n  |> filter(fn: (r) => r[\"_field\"] == \"temperature\")\n  |> filter(fn: (r) => r[\"id\"] == \"${machine}\")\n\n  ",
           "refId": "A"
         }
       ],
-      "title": "Temperature",
+      "title": "Temperature | ${machine}",
       "type": "stat"
     },
     {
@@ -317,11 +317,11 @@
             "type": "influxdb",
             "uid": "influxdb"
           },
-          "query": "from(bucket: \"vibration_monitoring\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"fft\")\n  ",
+          "query": "from(bucket: \"vibration_monitoring\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"fft\")\n  |> filter(fn: (r) => r[\"id\"] == \"${machine}\")\n\n  ",
           "refId": "A"
         }
       ],
-      "title": "Fourier Transform",
+      "title": "Fourier Transform | ${machine}",
       "transformations": [],
       "type": "heatmap"
     }
@@ -336,19 +336,19 @@
       {
         "current": {
           "selected": false,
-          "text": "",
-          "value": ""
+          "text": "machine_1",
+          "value": "machine_1"
         },
         "hide": 0,
         "name": "machine",
         "options": [
           {
             "selected": true,
-            "text": "Machine_1",
-            "value": "Machine_1"
+            "text": "machine_1",
+            "value": "machine_1"
           }
         ],
-        "query": "",
+        "query": "machine_1",
         "skipUrlSync": false,
         "type": "textbox"
       }
@@ -362,6 +362,6 @@
   "timezone": "",
   "title": "Vibration & Temperature Dashboard",
   "uid": "70aiGq34k",
-  "version": 13,
+  "version": 6,
   "weekStart": ""
 }
