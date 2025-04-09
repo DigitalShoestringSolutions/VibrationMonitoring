@@ -21,6 +21,8 @@ services:
         privileged: true
         volumes:
           - ./config/telegraf.conf:/etc/telegraf/telegraf.conf
+        ports:
+          - "8094:8094/udp"
         environment: 
           - DOCKER_INFLUXDB_ORG=${DB_ORG}
           - DOCKER_INFLUXDB_BUCKET=${DB_BUCKET}
