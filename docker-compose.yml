@@ -1,6 +1,39 @@
 version: "2"
 
 services:
+    ai_app:
+        extends:
+            file: ai_analysis/app.yml
+            service: api_service
+        restart: unless-stopped
+        logging:
+            driver: syslog
+        networks:
+            internal:
+                aliases:
+                    - ml-service.docker.local
+    ai_worker:
+        extends:
+            file: ai_analysis/app.yml
+            service: ml_worker
+        restart: unless-stopped
+        logging:
+            driver: syslog
+        networks:
+            internal:
+                aliases:
+                    - ml-worker.docker.local
+    redis:
+        extends:
+            file: ai_analysis/app.yml
+            service: redis
+        restart: unless-stopped
+        logging:
+            driver: syslog
+        networks:
+            internal:
+                aliases:
+                    - redis.docker.local
     mqtt_broker:
         extends:
             file: mqtt_broker/app.yml
