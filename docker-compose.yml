@@ -93,7 +93,32 @@ services:
         restart: unless-stopped
         depends_on:
             - "mqtt_broker"
-
+    kapacitor:
+        extends:
+            file: kapacitor/app.yml
+            service: kapacitor
+        restart: unless-stopped
+        logging:
+            driver: syslog
+            options:
+                tag: docker-kapacitor
+        networks:
+            internal:
+                aliases:
+                    - kapacitor.docker.local
+    # chronograf:
+    #     extends:
+    #         file: ai_analysis/app.yml
+    #         service: chronograf
+    #     restart: unless-stopped
+    #     logging:
+    #         driver: syslog
+    #         options:
+    #             tag: docker-chronograf
+    #     networks:
+    #         internal:
+    #             aliases:
+    #                 - chronograf.docker.local   
 networks:
      internal:
          name: shoestring-internal

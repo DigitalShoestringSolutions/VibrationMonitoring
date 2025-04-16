@@ -1,0 +1,14 @@
+dbrp "vibration_monitoring"."autogen"
+
+batch
+    |query('SELECT value FROM "vibration_monitoring"."autogen"."socket_listener"')
+        .period(10s)
+        .every(10s)
+    |log()
+        .level('INFO')
+        .prefix('DATA-FLOW')
+    |influxDBOut()
+        .database('vibration_monitoring')
+        .retentionPolicy('autogen')
+        .measurement('vibration_processed')
+        .tag('processed_by', 'kapacitor_etl_batch')

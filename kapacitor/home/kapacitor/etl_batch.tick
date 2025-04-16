@@ -1,0 +1,25 @@
+dbrp "vibration_monitoring"."autogen"
+
+var window_size = 10s
+var measurement = 'socket_listener'
+var output_measurement = 'vibration_processed'
+
+var constant_value = 14.4  // The constant value you want to subtract from each data point
+
+
+
+batch
+    |query('SELECT value FROM "vibration_monitoring"."autogen"."socket_listener"')
+        .period(window_size)
+        .every(window_size)
+
+    // Subtract the constant value from each data point
+    |eval(lambda: "value" - constant_value)
+        .as('ac_component')  // Save the result as ac_component
+
+    // Output the result to InfluxDB
+    |influxDBOut()
+        .database('vibration_monitoring')
+        .retentionPolicy('autogen')
+        .measurement(output_measurement)
+        .tag('processed_by', 'kapacitor_etl_batch')

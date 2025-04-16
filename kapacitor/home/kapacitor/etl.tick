@@ -1,0 +1,29 @@
+dbrp "vibration_db"."autogen"
+
+// Define variables for reuse and easy configuration
+var measurement = 'socket_listener'
+var window_size = 10s
+var output_measurement = 'vibration_processed'
+
+var constant_value = 14.4  // The constant value you want to subtract from each data point
+
+stream
+    // Source data
+    |from()
+        .measurement(measurement)
+    
+    // Subtract the constant value from each data point
+    |eval(lambda: "value" - constant_value)
+        .as('ac_component')
+    
+    // Optional: Calculate amplitude (absolute value of the ac_component)
+    |eval(lambda: abs("ac_component"))
+        .as('amplitude')
+
+    // Output to InfluxDB
+    |influxDBOut()
+        .database('vibration_monitoring')
+        .retentionPolicy('autogen')
+        .measurement(output_measurement)
+        .tag('processed_by', 'kapacitor_etl')
+        .tag('version', '1.0')

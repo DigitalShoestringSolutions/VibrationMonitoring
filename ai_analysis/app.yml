@@ -67,3 +67,61 @@ services:
       container_name: redis
       ports:
         - "6379:6379"
+
+    # kapacitor:
+    #     image: arm64v8/kapacitor:1.6
+    #     user: $CURRENT_UID
+    #     volumes:
+    #         - ./kapacitor/config:/etc/kapacitor
+    #         - ./kapacitor/data:/var/lib/kapacitor
+    #         - ./kapacitor/scripts:/scripts
+    #     working_dir: /var/lib/kapacitor 
+    #     ports:
+    #         - "9092:9092"
+    #     environment:
+    #         - KAPACITOR_HOSTNAME=kapacitor
+    #         - KAPACITOR_INFLUXDB_0_URLS_0=http://timeseries-db.docker.local:8086
+    #         - KAPACITOR_INFLUXDB_0_TOKEN=${DB_ADMIN_INITIAL_TOKEN}
+    #         - KAPACITOR_INFLUXDB_0_ORG=${DB_ORG}
+    #         - KAPACITOR_HTTP_AUTH_ENABLED=false
+    #         - KAPACITOR_HTTP_LOG_ENABLED=true
+    #         - KAPACITOR_LOGGING_LEVEL=DEBUG
+    #         - KAPACITOR_HTTP_BIND_ADDRESS=:9092
+    #     networks:
+    #         internal:
+    #             aliases:
+    #                 - kapacitor.docker.local
+    #     depends_on:
+    #         - "timeseries-db"
+    #     logging:
+    #         driver: syslog
+    #         options:
+    #             tag: docker-kapacitor
+    #     restart: unless-stopped
+
+
+
+    # chronograf:
+    #     image: arm64v8/chronograf:1.10
+    #     user: $CURRENT_UID
+    #     ports:
+    #         - "8888:8888"
+    #     volumes:
+    #         - ./chronograf/data:/var/lib/chronograf
+    #     environment:
+    #         - INFLUXDB_URL=http://timeseries-db.docker.local:8086
+    #         - INFLUXDB_TOKEN=${DB_ADMIN_INITIAL_TOKEN}
+    #         - INFLUXDB_ORG=${DB_ORG}
+    #         - KAPACITOR_URL=http://kapacitor.docker.local:9092
+    #     networks:
+    #         internal:
+    #             aliases:
+    #                 - chronograf.docker.local
+    #     depends_on:
+    #         - "timeseries-db"
+    #         - "kapacitor"
+    #     logging:
+    #         driver: syslog
+    #         options:
+    #             tag: docker-chronograf
+    #     restart: unless-stopped

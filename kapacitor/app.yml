@@ -1,0 +1,31 @@
+version: '2'
+
+services:
+  kapacitor:
+    image: arm64v8/kapacitor:1.6
+    user: $CURRENT_UID
+    volumes:
+      - ./etc/kapacitor:/etc/kapacitor
+      - ./var/log/kapacitor:/var/log/kapacitor
+      - ./home/kapacitor:/home/kapacitor
+      - ./var/lib/kapacitor:/var/lib/kapacitor
+    ports:
+        - "9092:9092"
+    environment:
+        - KAPACITOR_HOSTNAME=kapacitor
+        - KAPACITOR_INFLUXDB_0_URLS_0=http://timeseries-db.docker.local:8086
+        - KAPACITOR_INFLUXDB_0_TOKEN=${DB_ADMIN_INITIAL_TOKEN}
+        - KAPACITOR_INFLUXDB_0_ORG=${DB_ORG}
+        - KAPACITOR_INFLUXDB_0_USERNAME=${DB_ADMIN_USER}
+        - KAPACITOR_INFLUXDB_0_PASSWORD=${DB_ADMIN_INITIAL_PASSWORD}
+    networks:
+        internal:
+            aliases:
+                - kapacitor.docker.local
+    depends_on:
+        - "timeseries-db"
+    logging:
+        driver: syslog
+        options:
+            tag: docker-kapacitor
+    restart: unless-stopped
