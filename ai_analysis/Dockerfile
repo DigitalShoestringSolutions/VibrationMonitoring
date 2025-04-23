@@ -43,7 +43,7 @@ CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 FROM base as worker
 # Install worker-specific dependencies
 RUN pip install --no-cache-dir \
-    tflite==2.3.0 \
+    tflite-runtime==2.14.0 \
     numpy==1.24.3 \
     pandas==2.2.0 \
     scikit-learn==1.4.0 \

@@ -3,3 +3,152 @@ ts=2025-04-16T16:02:40.751Z lvl=info msg="http request" service=http host=172.18
 ts=2025-04-16T16:02:42.754Z lvl=info msg="http request" service=http host=172.18.0.4 username=- start=2025-04-16T16:02:42.7464155Z method=POST uri=/write?db=vibration_db&rp=autogen protocol=HTTP/1.1 status=204 referer=- user-agent="Telegraf/1.30.3 Go/1.22.3" request-id=3aa461e3-1adc-11f0-85c2-e2183d0cb38e duration=7.912761ms
 ts=2025-04-16T16:02:44.131Z lvl=info msg="http request" service=http host=172.18.0.4 username=- start=2025-04-16T16:02:44.125427596Z method=POST uri=/write?db=vibration_db&rp=autogen protocol=HTTP/1.1 status=204 referer=- user-agent="Telegraf/1.30.3 Go/1.22.3" request-id=3b76cd8d-1adc-11f0-85c3-e2183d0cb38e duration=5.991746ms
 ts=2025-04-16T16:02:46.134Z lvl=info msg="http request" service=http host=172.18.0.4 username=- start=2025-04-16T16:02:46.126982681Z method=POST uri=/write?db=vibration_db&rp=autogen protocol=HTTP/1.1 status=204 referer=- user-agent="Telegraf/1.30.3 Go/1.22.3" request-id=3ca83753-1adc-11f0-85c4-e2183d0cb38e duration=7.834816ms
+ts=2025-04-16T16:02:48.140Z lvl=info msg="http request" service=http host=172.18.0.4 username=- start=2025-04-16T16:02:48.126122064Z method=POST uri=/write?db=vibration_db&rp=autogen protocol=HTTP/1.1 status=204 referer=- user-agent="Telegraf/1.30.3 Go/1.22.3" request-id=3dd942b2-1adc-11f0-85c5-e2183d0cb38e duration=14.232358ms
+ts=2025-04-16T16:02:49.856Z lvl=info msg="http request" service=http host=172.18.0.4 username=- start=2025-04-16T16:02:49.850492906Z method=POST uri=/write?db=vibration_db&rp=autogen protocol=HTTP/1.1 status=204 referer=- user-agent="Telegraf/1.30.3 Go/1.22.3" request-id=3ee060ea-1adc-11f0-85c6-e2183d0cb38e duration=6.222486ms
+ts=2025-04-16T16:02:51.853Z lvl=info msg="http request" service=http host=172.18.0.4 username=- start=2025-04-16T16:02:51.846248661Z method=POST uri=/write?db=vibration_db&rp=autogen protocol=HTTP/1.1 status=204 referer=- user-agent="Telegraf/1.30.3 Go/1.22.3" request-id=4010e81e-1adc-11f0-85c7-e2183d0cb38e duration=7.433502ms
+ts=2025-04-16T16:02:53.853Z lvl=info msg="http request" service=http host=172.18.0.4 username=- start=2025-04-16T16:02:53.845366461Z method=POST uri=/write?db=vibration_db&rp=autogen protocol=HTTP/1.1 status=204 referer=- user-agent="Telegraf/1.30.3 Go/1.22.3" request-id=4141f2a8-1adc-11f0-85c8-e2183d0cb38e duration=8.29363ms
+ts=2025-04-16T16:02:55.504Z lvl=info msg="http request" service=http host=172.18.0.4 username=- start=2025-04-16T16:02:55.499834598Z method=POST uri=/write?db=vibration_db&rp=autogen protocol=HTTP/1.1 status=204 referer=- user-agent="Telegraf/1.30.3 Go/1.22.3" request-id=423e6651-1adc-11f0-85c9-e2183d0cb38e duration=5.076025ms
+ts=2025-04-16T16:02:57.501Z lvl=info msg="http request" service=http host=172.18.0.4 username=- start=2025-04-16T16:02:57.492157185Z method=POST uri=/write?db=vibration_db&rp=autogen protocol=HTTP/1.1 status=204 referer=- user-agent="Telegraf/1.30.3 Go/1.22.3" request-id=436e6776-1adc-11f0-85ca-e2183d0cb38e duration=8.862647ms
+ts=2025-04-16T16:02:59.502Z lvl=info msg="http request" service=http host=172.18.0.4 username=- start=2025-04-16T16:02:59.495067597Z method=POST uri=/write?db=vibration_db&rp=autogen protocol=HTTP/1.1 status=204 referer=- user-agent="Telegraf/1.30.3 Go/1.22.3" request-id=44a00621-1adc-11f0-85cb-e2183d0cb38e duration=7.466576ms
+ts=2025-04-16T16:03:01.502Z lvl=info msg="http request" service=http host=172.18.0.4 username=- start=2025-04-16T16:03:01.49311035Z method=POST uri=/write?db=vibration_db&rp=autogen protocol=HTTP/1.1 status=204 referer=- user-agent="Telegraf/1.30.3 Go/1.22.3" request-id=45d0e6a8-1adc-11f0-85cc-e2183d0cb38e duration=9.187721ms
+ts=2025-04-16T16:03:01.755Z lvl=info msg="http request" service=http host=172.18.0.4 username=- start=2025-04-16T16:03:01.754036139Z method=POST uri=/write?db=vibration_db&rp=autogen protocol=HTTP/1.1 status=204 referer=- user-agent="Telegraf/1.30.3 Go/1.22.3" request-id=45f8b71a-1adc-11f0-85cd-e2183d0cb38e duration=1.059664ms
+ts=2025-04-16T16:03:07.242Z lvl=info msg="http request" service=http host=172.18.0.4 username=- start=2025-04-16T16:03:07.239134403Z method=POST uri=/write?db=vibration_db&rp=autogen protocol=HTTP/1.1 status=204 referer=- user-agent="Telegraf/1.30.3 Go/1.22.3" request-id=493dacbc-1adc-11f0-85ce-e2183d0cb38e duration=3.1129ms
+ts=2025-04-16T16:07:42.883Z lvl=info msg="SIGTERM received, initializing clean shutdown..." service=run
+ts=2025-04-16T16:07:42.883Z lvl=info msg="waiting for clean shutdown..." service=run
+ts=2025-04-16T16:07:42.883Z lvl=info msg="closed HTTP service" service=http
+ts=2025-04-16T16:07:42.883Z lvl=info msg="stopped task" service=kapacitor task_master=main task=etl_task
+ts=2025-04-16T16:07:42.883Z lvl=info msg="closed HTTP service" service=http
+ts=2025-04-16T16:07:42.884Z lvl=info msg="closed task master" service=kapacitor task_master=main
+ts=2025-04-16T16:07:42.884Z lvl=info msg="server shutdown completed" service=run
+ts=2025-04-23T14:05:40.695Z lvl=info msg="kapacitor starting" service=run version=1.6.6 branch=HEAD commit=79897085a4802304bb2fb052035bac4d16913302
+ts=2025-04-23T14:05:40.695Z lvl=info msg="go version" service=run version=go1.19.4
+ts=2025-04-23T14:05:40.793Z lvl=info msg="listing Kapacitor hostname" source=srv hostname=kapacitor
+ts=2025-04-23T14:05:40.793Z lvl=info msg="listing ClusterID and ServerID" source=srv cluster_id=946faabb-ebc3-4701-8a1e-2cdc15dafadc server_id=8c376a51-303a-4feb-b997-e652a0f92d03
+ts=2025-04-23T14:05:40.795Z lvl=info msg="opened task master" service=kapacitor task_master=main
+ts=2025-04-23T14:05:40.834Z lvl=info msg="started task" service=kapacitor task_master=main task=etl_task
+ts=2025-04-23T14:05:40.837Z lvl=info msg="starting HTTP service" service=http
+ts=2025-04-23T14:05:40.837Z lvl=info msg=authentication service=http enabled=false
+ts=2025-04-23T14:05:40.838Z lvl=info msg="listening on" service=http addr=[::]:9092 protocol=http
+ts=2025-04-23T14:05:40.838Z lvl=info msg="listening for signals" service=run
+ts=2025-04-23T14:19:58.804Z lvl=info msg="SIGTERM received, initializing clean shutdown..." service=run
+ts=2025-04-23T14:19:58.804Z lvl=info msg="waiting for clean shutdown..." service=run
+ts=2025-04-23T14:19:58.804Z lvl=info msg="closed HTTP service" service=http
+ts=2025-04-23T14:19:58.804Z lvl=info msg="stopped task" service=kapacitor task_master=main task=etl_task
+ts=2025-04-23T14:19:58.804Z lvl=info msg="closed HTTP service" service=http
+ts=2025-04-23T14:19:58.805Z lvl=info msg="closed task master" service=kapacitor task_master=main
+ts=2025-04-23T14:19:58.805Z lvl=info msg="server shutdown completed" service=run
+ts=2025-04-23T14:20:13.651Z lvl=info msg="kapacitor starting" service=run version=1.6.6 branch=HEAD commit=79897085a4802304bb2fb052035bac4d16913302
+ts=2025-04-23T14:20:13.652Z lvl=info msg="go version" service=run version=go1.19.4
+ts=2025-04-23T14:20:13.707Z lvl=info msg="listing Kapacitor hostname" source=srv hostname=kapacitor
+ts=2025-04-23T14:20:13.707Z lvl=info msg="listing ClusterID and ServerID" source=srv cluster_id=946faabb-ebc3-4701-8a1e-2cdc15dafadc server_id=8c376a51-303a-4feb-b997-e652a0f92d03
+ts=2025-04-23T14:20:13.707Z lvl=info msg="opened task master" service=kapacitor task_master=main
+ts=2025-04-23T14:20:13.729Z lvl=info msg="started task" service=kapacitor task_master=main task=etl_task
+ts=2025-04-23T14:20:13.731Z lvl=info msg="starting HTTP service" service=http
+ts=2025-04-23T14:20:13.731Z lvl=info msg=authentication service=http enabled=false
+ts=2025-04-23T14:20:13.731Z lvl=info msg="listening on" service=http addr=[::]:9092 protocol=http
+ts=2025-04-23T14:20:13.732Z lvl=info msg="listening for signals" service=run
+ts=2025-04-23T14:20:13.751Z lvl=info msg="http request" service=http host=172.18.0.9 username=- start=2025-04-23T14:20:13.750979388Z method=POST uri=/query protocol=HTTP/1.1 status=404 referer=- user-agent="Telegraf/1.30.3 Go/1.22.3" request-id=127263a9-204e-11f0-8001-b6596c780eec duration=359.924µs
+ts=2025-04-23T14:35:18.282Z lvl=info msg="SIGTERM received, initializing clean shutdown..." service=run
+ts=2025-04-23T14:35:18.282Z lvl=info msg="waiting for clean shutdown..." service=run
+ts=2025-04-23T14:35:18.282Z lvl=info msg="closed HTTP service" service=http
+ts=2025-04-23T14:35:18.282Z lvl=info msg="stopped task" service=kapacitor task_master=main task=etl_task
+ts=2025-04-23T14:35:18.282Z lvl=info msg="closed HTTP service" service=http
+ts=2025-04-23T14:35:18.283Z lvl=info msg="closed task master" service=kapacitor task_master=main
+ts=2025-04-23T14:35:18.284Z lvl=info msg="server shutdown completed" service=run
+ts=2025-04-23T14:35:32.318Z lvl=info msg="kapacitor starting" service=run version=1.6.6 branch=HEAD commit=79897085a4802304bb2fb052035bac4d16913302
+ts=2025-04-23T14:35:32.318Z lvl=info msg="go version" service=run version=go1.19.4
+ts=2025-04-23T14:35:32.374Z lvl=info msg="listing Kapacitor hostname" source=srv hostname=kapacitor
+ts=2025-04-23T14:35:32.375Z lvl=info msg="listing ClusterID and ServerID" source=srv cluster_id=946faabb-ebc3-4701-8a1e-2cdc15dafadc server_id=8c376a51-303a-4feb-b997-e652a0f92d03
+ts=2025-04-23T14:35:32.375Z lvl=info msg="opened task master" service=kapacitor task_master=main
+ts=2025-04-23T14:35:32.420Z lvl=info msg="started task" service=kapacitor task_master=main task=etl_task
+ts=2025-04-23T14:35:32.425Z lvl=info msg="starting HTTP service" service=http
+ts=2025-04-23T14:35:32.425Z lvl=info msg=authentication service=http enabled=false
+ts=2025-04-23T14:35:32.426Z lvl=info msg="listening on" service=http addr=[::]:9092 protocol=http
+ts=2025-04-23T14:35:32.430Z lvl=info msg="listening for signals" service=run
+ts=2025-04-23T14:35:32.466Z lvl=info msg="http request" service=http host=172.18.0.7 username=- start=2025-04-23T14:35:32.466062654Z method=POST uri=/query protocol=HTTP/1.1 status=404 referer=- user-agent="Telegraf/1.30.3 Go/1.22.3" request-id=360b2f9a-2050-11f0-8001-7edfea9812e4 duration=760.76µs
+ts=2025-04-23T14:37:52.726Z lvl=info msg="SIGTERM received, initializing clean shutdown..." service=run
+ts=2025-04-23T14:37:52.727Z lvl=info msg="waiting for clean shutdown..." service=run
+ts=2025-04-23T14:37:52.727Z lvl=info msg="closed HTTP service" service=http
+ts=2025-04-23T14:37:52.727Z lvl=info msg="stopped task" service=kapacitor task_master=main task=etl_task
+ts=2025-04-23T14:37:52.727Z lvl=info msg="closed HTTP service" service=http
+ts=2025-04-23T14:37:52.728Z lvl=info msg="closed task master" service=kapacitor task_master=main
+ts=2025-04-23T14:37:52.728Z lvl=info msg="server shutdown completed" service=run
+ts=2025-04-23T14:38:04.436Z lvl=info msg="kapacitor starting" service=run version=1.6.6 branch=HEAD commit=79897085a4802304bb2fb052035bac4d16913302
+ts=2025-04-23T14:38:04.437Z lvl=info msg="go version" service=run version=go1.19.4
+ts=2025-04-23T14:38:04.486Z lvl=info msg="listing Kapacitor hostname" source=srv hostname=kapacitor
+ts=2025-04-23T14:38:04.486Z lvl=info msg="listing ClusterID and ServerID" source=srv cluster_id=946faabb-ebc3-4701-8a1e-2cdc15dafadc server_id=8c376a51-303a-4feb-b997-e652a0f92d03
+ts=2025-04-23T14:38:04.487Z lvl=info msg="opened task master" service=kapacitor task_master=main
+ts=2025-04-23T14:38:04.503Z lvl=info msg="started task" service=kapacitor task_master=main task=etl_task
+ts=2025-04-23T14:38:04.504Z lvl=info msg="starting HTTP service" service=http
+ts=2025-04-23T14:38:04.504Z lvl=info msg=authentication service=http enabled=false
+ts=2025-04-23T14:38:04.504Z lvl=info msg="listening on" service=http addr=[::]:9092 protocol=http
+ts=2025-04-23T14:38:04.505Z lvl=info msg="listening for signals" service=run
+ts=2025-04-23T14:39:33.667Z lvl=info msg="SIGTERM received, initializing clean shutdown..." service=run
+ts=2025-04-23T14:39:33.667Z lvl=info msg="waiting for clean shutdown..." service=run
+ts=2025-04-23T14:39:33.668Z lvl=info msg="closed HTTP service" service=http
+ts=2025-04-23T14:39:33.668Z lvl=info msg="stopped task" service=kapacitor task_master=main task=etl_task
+ts=2025-04-23T14:39:33.668Z lvl=info msg="closed HTTP service" service=http
+ts=2025-04-23T14:39:33.668Z lvl=info msg="closed task master" service=kapacitor task_master=main
+ts=2025-04-23T14:39:33.668Z lvl=info msg="server shutdown completed" service=run
+ts=2025-04-23T14:39:51.775Z lvl=info msg="kapacitor starting" service=run version=1.6.6 branch=HEAD commit=79897085a4802304bb2fb052035bac4d16913302
+ts=2025-04-23T14:39:51.775Z lvl=info msg="go version" service=run version=go1.19.4
+ts=2025-04-23T14:39:51.844Z lvl=info msg="listing Kapacitor hostname" source=srv hostname=kapacitor
+ts=2025-04-23T14:39:51.844Z lvl=info msg="listing ClusterID and ServerID" source=srv cluster_id=946faabb-ebc3-4701-8a1e-2cdc15dafadc server_id=8c376a51-303a-4feb-b997-e652a0f92d03
+ts=2025-04-23T14:39:51.844Z lvl=info msg="opened task master" service=kapacitor task_master=main
+ts=2025-04-23T14:39:52.140Z lvl=info msg="started task" service=kapacitor task_master=main task=etl_task
+ts=2025-04-23T14:39:52.141Z lvl=info msg="starting HTTP service" service=http
+ts=2025-04-23T14:39:52.142Z lvl=info msg=authentication service=http enabled=false
+ts=2025-04-23T14:39:52.142Z lvl=info msg="listening on" service=http addr=[::]:9092 protocol=http
+ts=2025-04-23T14:39:52.142Z lvl=info msg="listening for signals" service=run
+ts=2025-04-23T14:44:26.323Z lvl=info msg="SIGTERM received, initializing clean shutdown..." service=run
+ts=2025-04-23T14:44:26.323Z lvl=info msg="waiting for clean shutdown..." service=run
+ts=2025-04-23T14:44:26.323Z lvl=info msg="closed HTTP service" service=http
+ts=2025-04-23T14:44:26.323Z lvl=info msg="stopped task" service=kapacitor task_master=main task=etl_task
+ts=2025-04-23T14:44:26.324Z lvl=info msg="closed HTTP service" service=http
+ts=2025-04-23T14:44:26.324Z lvl=info msg="closed task master" service=kapacitor task_master=main
+ts=2025-04-23T14:44:26.324Z lvl=info msg="server shutdown completed" service=run
+ts=2025-04-23T14:44:42.401Z lvl=info msg="kapacitor starting" service=run version=1.6.6 branch=HEAD commit=79897085a4802304bb2fb052035bac4d16913302
+ts=2025-04-23T14:44:42.401Z lvl=info msg="go version" service=run version=go1.19.4
+ts=2025-04-23T14:44:42.442Z lvl=info msg="listing Kapacitor hostname" source=srv hostname=kapacitor
+ts=2025-04-23T14:44:42.443Z lvl=info msg="listing ClusterID and ServerID" source=srv cluster_id=946faabb-ebc3-4701-8a1e-2cdc15dafadc server_id=8c376a51-303a-4feb-b997-e652a0f92d03
+ts=2025-04-23T14:44:42.443Z lvl=info msg="opened task master" service=kapacitor task_master=main
+ts=2025-04-23T14:44:42.466Z lvl=info msg="started task" service=kapacitor task_master=main task=etl_task
+ts=2025-04-23T14:44:42.467Z lvl=info msg="starting HTTP service" service=http
+ts=2025-04-23T14:44:42.471Z lvl=info msg=authentication service=http enabled=false
+ts=2025-04-23T14:44:42.471Z lvl=info msg="listening on" service=http addr=[::]:9092 protocol=http
+ts=2025-04-23T14:44:42.471Z lvl=info msg="listening for signals" service=run
+ts=2025-04-23T14:44:42.553Z lvl=info msg="http request" service=http host=172.18.0.8 username=- start=2025-04-23T14:44:42.553181771Z method=POST uri=/query protocol=HTTP/1.1 status=404 referer=- user-agent="Telegraf/1.30.3 Go/1.22.3" request-id=7debd1b1-2051-11f0-8001-52065be06cf1 duration=417.907µs
+ts=2025-04-23T14:53:23.446Z lvl=info msg="SIGTERM received, initializing clean shutdown..." service=run
+ts=2025-04-23T14:53:23.447Z lvl=info msg="waiting for clean shutdown..." service=run
+ts=2025-04-23T14:53:23.447Z lvl=info msg="closed HTTP service" service=http
+ts=2025-04-23T14:53:23.448Z lvl=info msg="stopped task" service=kapacitor task_master=main task=etl_task
+ts=2025-04-23T14:53:23.448Z lvl=info msg="closed HTTP service" service=http
+ts=2025-04-23T14:53:23.448Z lvl=info msg="closed task master" service=kapacitor task_master=main
+ts=2025-04-23T14:53:23.449Z lvl=info msg="server shutdown completed" service=run
+ts=2025-04-23T14:53:37.970Z lvl=info msg="kapacitor starting" service=run version=1.6.6 branch=HEAD commit=79897085a4802304bb2fb052035bac4d16913302
+ts=2025-04-23T14:53:37.970Z lvl=info msg="go version" service=run version=go1.19.4
+ts=2025-04-23T14:53:38.014Z lvl=info msg="listing Kapacitor hostname" source=srv hostname=kapacitor
+ts=2025-04-23T14:53:38.014Z lvl=info msg="listing ClusterID and ServerID" source=srv cluster_id=946faabb-ebc3-4701-8a1e-2cdc15dafadc server_id=8c376a51-303a-4feb-b997-e652a0f92d03
+ts=2025-04-23T14:53:38.014Z lvl=info msg="opened task master" service=kapacitor task_master=main
+ts=2025-04-23T14:53:38.034Z lvl=info msg="started task" service=kapacitor task_master=main task=etl_task
+ts=2025-04-23T14:53:38.036Z lvl=info msg="starting HTTP service" service=http
+ts=2025-04-23T14:53:38.036Z lvl=info msg=authentication service=http enabled=false
+ts=2025-04-23T14:53:38.036Z lvl=info msg="listening on" service=http addr=[::]:9092 protocol=http
+ts=2025-04-23T14:53:38.036Z lvl=info msg="listening for signals" service=run
+ts=2025-04-23T14:56:53.721Z lvl=info msg="SIGTERM received, initializing clean shutdown..." service=run
+ts=2025-04-23T14:56:53.722Z lvl=info msg="waiting for clean shutdown..." service=run
+ts=2025-04-23T14:56:53.722Z lvl=info msg="closed HTTP service" service=http
+ts=2025-04-23T14:56:53.722Z lvl=info msg="stopped task" service=kapacitor task_master=main task=etl_task
+ts=2025-04-23T14:56:53.722Z lvl=info msg="closed HTTP service" service=http
+ts=2025-04-23T14:56:53.723Z lvl=info msg="closed task master" service=kapacitor task_master=main
+ts=2025-04-23T14:56:53.723Z lvl=info msg="server shutdown completed" service=run
+ts=2025-04-23T14:57:12.649Z lvl=info msg="kapacitor starting" service=run version=1.6.6 branch=HEAD commit=79897085a4802304bb2fb052035bac4d16913302
+ts=2025-04-23T14:57:12.649Z lvl=info msg="go version" service=run version=go1.19.4
+ts=2025-04-23T14:57:12.697Z lvl=info msg="listing Kapacitor hostname" source=srv hostname=kapacitor
+ts=2025-04-23T14:57:12.697Z lvl=info msg="listing ClusterID and ServerID" source=srv cluster_id=946faabb-ebc3-4701-8a1e-2cdc15dafadc server_id=8c376a51-303a-4feb-b997-e652a0f92d03
+ts=2025-04-23T14:57:12.698Z lvl=info msg="opened task master" service=kapacitor task_master=main
+ts=2025-04-23T14:57:12.722Z lvl=info msg="started task" service=kapacitor task_master=main task=etl_task
+ts=2025-04-23T14:57:12.723Z lvl=info msg="starting HTTP service" service=http
+ts=2025-04-23T14:57:12.723Z lvl=info msg=authentication service=http enabled=false
+ts=2025-04-23T14:57:12.723Z lvl=info msg="listening on" service=http addr=[::]:9092 protocol=http
+ts=2025-04-23T14:57:12.724Z lvl=info msg="listening for signals" service=run

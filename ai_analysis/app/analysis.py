@@ -1,9 +1,10 @@
 import numpy as np
 from typing import Dict, Any, List
 import logging
-import tensorflowlite as tflite
+import tflite_runtime.interpreter as tflite
 import numpy as np
 import pandas as pd
+import time
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -44,32 +45,62 @@ def detect_anomaly(rms_acceleration: float, temperature: float) -> bool:
 def analyze_vibration_data(data: Dict[str, Any]) -> Dict[str, Any]:
     """
     Main analysis function that processes vibration data.
+     - takes the influx data across the time period
+     - load the data with a dataloader
+
+     - load the model checkpoint
+     - run inference on the data in batches
+     - calculate the reconsstruction loss across the batch
+     - return max reconstruction loss, min and mean reconstruction loss
     
     Args:
-        data: Dictionary containing:
-            - acceleration: List of acceleration values
-
-            - timestamp: ISO format timestamp
-            
+        Data from influxdb, what is the formt though?
     Returns:
         Dictionary containing analysis results
     """
     try:
-        logger.info(f"Starting vibration analysis for data: {data}")
+        logger.info(f"Starting vibration analysis with {len(data)} points")
         
-        # Extract data
-        acceleration = data.get('acceleration', [])
+        # Extract acceleration values and convert to numpy array
+        acceleration_values = np.array([point.get('acceleration', 0.0) for point in data])
         
-        # Perform analysis
-        rms_acceleration = calculate_rms(acceleration)
-        is_anomaly = detect_anomaly(rms_acceleration, temperature)
+        # Ensure we have the right number of data points (pad or truncate to 128)
+        if len(acceleration_values) > 128:
+            acceleration_values = acceleration_values[:128]
+        elif len(acceleration_values) < 128:
+            # Pad with zeros if we have less than 128 points
+            padding = np.zeros(128 - len(acceleration_values))
+            acceleration_values = np.concatenate([acceleration_values, padding])
         
+        # Reshape to match the model's expected input shape [1, 1, 128]
+        model_input = acceleration_values.reshape(1, 1, 128).astype(np.float32)
+        
+        # Load and run the TFLite model
+        interpreter = tflite.Interpreter(model_path='data/checkpoints/autoencoder_checkpoint.tflite')
+        interpreter.allocate_tensors()
+
+        # Get input and output tensors
+        input_details = interpreter.get_input_details()
+        output_details = interpreter.get_output_details()
+        
+        # Set the input tensor
+        interpreter.set_tensor(input_details[0]['index'], model_input)
+        
+        # Run inference
+        interpreter.invoke()
+        
+        # Get the output tensor
+        output_data = interpreter.get_tensor(output_details[0]['index'])
+        reconstruction_loss = np.mean(np.square(model_input - output_data))
+        logger.info(f"Raw reconstruction loss: {reconstruction_loss}")
+
         result = {
-            'rms_acceleration': rms_acceleration,
-            'temperature': temperature,
-            'is_anomaly': is_anomaly,
-            'analysis_timestamp': data.get('timestamp'),
-            'status': 'completed'
+            'status': 'completed',
+            'analysis_timestamp': time.strftime('%Y-%m-%dT%H:%M:%S%z'),
+            'data_points_analyzed': len(data),
+            'max_reconstruction_loss': 0.0,
+            'min_reconstruction_loss': 0.0,
+            'mean_reconstruction_loss': float(reconstruction_loss)
         }
         
         logger.info(f"Analysis completed: {result}")
@@ -78,3 +109,5 @@ def analyze_vibration_data(data: Dict[str, Any]) -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error in vibration analysis: {str(e)}")
         raise
+
+

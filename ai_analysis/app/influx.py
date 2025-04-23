@@ -50,9 +50,7 @@ class InfluxDBService:
                 for record in table.records:
                     data_points.append({
                         'timestamp': record.get_time().isoformat(),
-                        'acceleration': record.values.get('acceleration'),
-                        'temperature': record.values.get('temperature'),
-                        'id': record.values.get('id')
+                        'acceleration': record.values.get('_value')
                     })
             
             logger.info(f"Retrieved {len(data_points)} data points")
