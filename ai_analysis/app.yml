@@ -40,6 +40,7 @@ services:
         volumes:
             - ./:/app
             - ./data:/app/data
+            - ./debug_output:/app/debug_output
         working_dir: /app
         command: celery -A app.tasks worker --loglevel=info
         environment:
@@ -50,6 +51,7 @@ services:
             - INFLUXDB_ORG=${DB_ORG}
             - INFLUXDB_BUCKET=${DB_BUCKET}
             - INFLUXDB_MEASUREMENT=${INFLUXDB_MEASUREMENT}
+            - INFLUXDB_MEASUREMENT_ANALYSIS=${INFLUXDB_MEASUREMENT_ANALYSIS}
         networks:
             internal:
                 aliases:

@@ -47,7 +47,8 @@ RUN pip install --no-cache-dir \
     numpy==1.24.3 \
     pandas==2.2.0 \
     scikit-learn==1.4.0 \
-    flower==2.0.1
+    flower==2.0.1 \
+    matplotlib==3.10.0
 
 # Copy application code
 COPY . .

@@ -14,7 +14,7 @@ class InfluxDBService:
         self.token = os.getenv('INFLUXDB_TOKEN')
         self.org = os.getenv('INFLUXDB_ORG')
         self.bucket = os.getenv('INFLUXDB_BUCKET')
-        self.measurement = os.getenv('INFLUXDB_MEASUREMENT')
+        self.measurement = os.getenv('INFLUXDB_MEASUREMENT_ANALYSIS')
         
         self.client = InfluxDBClient(
             url=self.url,
