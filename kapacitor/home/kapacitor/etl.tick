@@ -14,11 +14,8 @@ stream
     
     // Subtract the constant value from each data point
     |eval(lambda: "value" - constant_value)
-        .as('ac_component')
-    
-    // Optional: Calculate amplitude (absolute value of the ac_component)
-    |eval(lambda: abs("ac_component"))
         .as('amplitude')
+    
 
     // Output to InfluxDB
     |influxDBOut()
