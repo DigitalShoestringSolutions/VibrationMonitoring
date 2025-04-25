@@ -51,9 +51,10 @@ def analyze_vibration_data(data: Dict[str, Any]) -> Dict[str, Any]:
     try:
         logger.info(f"Starting vibration analysis with {len(data)} points")
         debug = True
+        model_name = 'autoencoder_checkpoint.tflite'
         
         # Load the TFLite model
-        interpreter = tflite.Interpreter(model_path='data/checkpoints/autoencoder_checkpoint.tflite')
+        interpreter = tflite.Interpreter(model_path=f'data/checkpoints/{model_name}')
         interpreter.allocate_tensors()
 
         # Get input and output tensors
@@ -116,7 +117,8 @@ def analyze_vibration_data(data: Dict[str, Any]) -> Dict[str, Any]:
             'max_reconstruction_loss': float(max_loss),
             'min_reconstruction_loss': float(min_loss),
             'mean_reconstruction_loss': float(mean_loss),
-            'num_batches_processed': num_batches
+            'num_batches_processed': num_batches,
+            'analysis_model': model_name
         }
         
         logger.info(f"Analysis completed: {result}")

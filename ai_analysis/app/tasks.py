@@ -63,10 +63,15 @@ def process_vibration_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
             **analysis_result,
             'status': 'completed',
             'analysis_timestamp': time.strftime('%Y-%m-%dT%H:%M:%S%z'),
-            'data_points_analyzed': len(vibration_data)
+            'data_start_time': data['start_time'],
+            'data_end_time': data['end_time'],
         }
         
         logger.info(f"Analysis completed: {result}")
+
+        # Save the result to InfluxDB
+        influx_service.save_analysis_result(result)
+
         return result
         
     except Exception as exc:
