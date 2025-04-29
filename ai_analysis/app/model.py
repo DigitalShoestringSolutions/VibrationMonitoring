@@ -6,7 +6,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-class VibrationAutoencoder(tf.keras.Model):
+class DynamicAutoencoder(tf.keras.Model):
     """
     Autoencoder model for vibration analysis that can be reconstructed from tensor details.
     Architecture is automatically determined from the tensor details of a trained model.
@@ -141,13 +141,76 @@ class VibrationAutoencoder(tf.keras.Model):
 
     def get_config(self):
         """Return model configuration"""
-        config = super(VibrationAutoencoder, self).get_config()
+        config = super(DynamicAutoencoder, self).get_config()
         config.update({
             'layer_dims': self.layer_dims
         })
         return config
 
-def create_model_from_tensor_details(tensor_details: List[Dict[str, Any]]) -> VibrationAutoencoder:
+class StaticAutoencoder(tf.keras.Model):
+    """
+    Static autoencoder model for vibration analysis with fixed architecture.
+    Architecture: [128, 70, 39, 21, 12] for encoder and reverse for decoder.
+    """
+    
+    def __init__(self):
+        super(StaticAutoencoder, self).__init__()
+        
+        # Encoder layers
+        self.encoder_layers = [
+            tf.keras.layers.Dense(70, activation='relu', name='encoder_1'),
+            tf.keras.layers.Dense(39, activation='relu', name='encoder_2'),
+            tf.keras.layers.Dense(21, activation='relu', name='encoder_3'),
+            tf.keras.layers.Dense(12, activation='relu', name='encoder_4')
+        ]
+        
+        # Decoder layers
+        self.decoder_layers = [
+            tf.keras.layers.Dense(21, activation='relu', name='decoder_1'),
+            tf.keras.layers.Dense(39, activation='relu', name='decoder_2'),
+            tf.keras.layers.Dense(70, activation='relu', name='decoder_3'),
+            tf.keras.layers.Dense(128, activation=None, name='decoder_4')
+        ]
+        
+        # Input and output reshaping
+        self.flatten = tf.keras.layers.Flatten()
+        self.reshape = tf.keras.layers.Reshape((128, 1))
+
+    def call(self, inputs, training=None):
+        """
+        Forward pass of the model.
+        
+        Args:
+            inputs: Input tensor of shape (batch_size, sequence_length, 1)
+            training: Boolean indicating if in training mode
+            
+        Returns:
+            Reconstructed output tensor of shape (batch_size, sequence_length, 1)
+        """
+        # Store original shape
+        batch_size = tf.shape(inputs)[0]
+        
+        # Flatten input
+        x = self.flatten(inputs)
+        
+        # Encoder
+        for layer in self.encoder_layers:
+            x = layer(x)
+        
+        # Decoder
+        for layer in self.decoder_layers:
+            x = layer(x)
+        
+        # Reshape output back to original dimensions
+        x = self.reshape(x)
+        
+        return x
+
+    def get_config(self):
+        """Return model configuration"""
+        return super(StaticAutoencoder, self).get_config()
+
+def create_model_from_tensor_details(tensor_details: List[Dict[str, Any]]) -> DynamicAutoencoder:
     """
     Factory function to create a new model instance from tensor details.
     

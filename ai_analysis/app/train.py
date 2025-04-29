@@ -5,7 +5,7 @@ from typing import Dict, Any
 import logging
 from .influx import influx_service
 from .model_management import model_manager
-from .model import VibrationAutoencoder, create_model_from_tensor_details
+from .model import DynamicAutoencoder, StaticAutoencoder, create_model_from_tensor_details
 import os
 
 
@@ -36,6 +36,7 @@ def prepare_training_data(data: Dict[str, Any], sequence_length: int) -> np.ndar
     
     # Create dataset from pre-shaped sequences
     dataset = tf.data.Dataset.from_tensor_slices(sequences)
+    dataset = dataset.map(lambda x: (x, x))  # Return same data for both input and target
     dataset = dataset.shuffle(1000).batch(32).prefetch(tf.data.AUTOTUNE)
     
     logger.info(f"Dataset element spec: {dataset.element_spec}")
@@ -56,7 +57,7 @@ def finetune_model(data: Dict[str, Any]) -> Dict[str, Any]:
         Dictionary containing training results
     """
 
-    debug = False
+    debug = True
     try:
         logger.info("Starting model fine-tuning")
         
@@ -76,15 +77,15 @@ def finetune_model(data: Dict[str, Any]) -> Dict[str, Any]:
 
         logger.info(f"Input details: {input_details}")
         logger.info(f"Output details: {output_details}")
-        logger.info(f"Tensor details: {tensor_details}")
+        # logger.info(f"Tensor details: {tensor_details}")
 
         # get sequence length from tensor details
         sequence_length = input_details[0]['shape'][2]
         logger.info(f"Sequence length: {sequence_length}")
 
         # Create model from tensor details
-        model = create_model_from_tensor_details(tensor_details)
-
+        # model = create_model_from_tensor_details(tensor_details)
+        model = StaticAutoencoder()
         # Load weights from the current model
         # First, create a dummy input to build the model
         sample_input = tf.keras.Input(shape=(1,1,sequence_length))
@@ -140,10 +141,10 @@ def finetune_model(data: Dict[str, Any]) -> Dict[str, Any]:
         model_id = model_manager.save_model(
             model_path=temp_model_path,
             metrics={
-                'training_loss': final_loss,
+                'training_loss': str(final_loss),
             },
             params={
-                'sequence_length': sequence_length,
+                'sequence_length': str(sequence_length),
                 'epochs': 10
             },
             description="First attempt at fine-tuning model"
