@@ -3,7 +3,7 @@ from typing import Dict, Any, List
 import logging
 import tflite_runtime.interpreter as tflite
 import matplotlib.pyplot as plt
-
+from .model_management import model_manager
 import numpy as np
 import pandas as pd
 import time
@@ -51,16 +51,25 @@ def analyze_vibration_data(data: Dict[str, Any]) -> Dict[str, Any]:
     try:
         logger.info(f"Starting vibration analysis with {len(data)} points")
         debug = True
-        model_name = 'autoencoder_checkpoint.tflite'
-        
+
+        # get current model from model registry
+        model_registry = pd.read_json('data/checkpoints/model_registry.json')
+        current_model = model_manager.get_current_model()
+        if not current_model:
+            raise ValueError("No current model available")
+
+        # Use the complete path directly from the model info
+        model_path = current_model['path']
+        logger.info(f"Using model: {model_path}")
         # Load the TFLite model
-        interpreter = tflite.Interpreter(model_path=f'data/checkpoints/{model_name}')
+        interpreter = tflite.Interpreter(model_path=model_path)
         interpreter.allocate_tensors()
 
         # Get input and output tensors
         input_details = interpreter.get_input_details()
         input_shape = input_details[0]['shape']
-        sequence_length = input_shape[2]
+        sequence_length = input_shape[3] if len(input_shape) == 4 else input_shape[2]
+
         logger.info(f"Input tensor shape: {input_shape}")
         
         # Extract acceleration values and convert to numpy array
@@ -118,7 +127,7 @@ def analyze_vibration_data(data: Dict[str, Any]) -> Dict[str, Any]:
             'min_reconstruction_loss': float(min_loss),
             'mean_reconstruction_loss': float(mean_loss),
             'num_batches_processed': num_batches,
-            'analysis_model': model_name
+            'analysis_model': current_model['id']
         }
         
         logger.info(f"Analysis completed: {result}")
