@@ -58,7 +58,27 @@ def finetune_model(data: Dict[str, Any]) -> Dict[str, Any]:
         logger.info(f"Tensor details: {tensor_details}")
 
         model = VibrationAutoencoder(tensor_details)
+        # Load weights from the current model
+        # First, create a dummy input to build the model
+        sample_input = tf.keras.Input(shape=(128, 1))
+        model(sample_input)
 
+        # Extract weights from TFLite model
+        for detail in tensor_details:
+            if 'kernel' in detail['name'].lower() or 'bias' in detail['name'].lower():
+                tensor = interpreter.get_tensor(detail['index'])
+                # Find corresponding layer in our model
+                layer_name = detail['name'].split('/')[0]  # Get base layer name
+                for layer in model.layers:
+                    if layer_name in layer.name:
+                        if 'kernel' in detail['name'].lower():
+                            layer.kernel.assign(tensor)
+                        elif 'bias' in detail['name'].lower():
+                            layer.bias.assign(tensor)
+
+        logger.info("Successfully loaded weights from current model")
+        
+        model(sample_input)
 
 
         

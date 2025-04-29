@@ -46,7 +46,7 @@ class VibrationAutoencoder(tf.keras.Model):
         
         # Input reshaping layers
         self.flatten = tf.keras.layers.Flatten()
-        self.reshape = tf.keras.layers.Reshape((self.layer_dims[0], 1))
+        self.reshape = tf.keras.layers.Reshape((self.layer_dims[-1], 1))
 
     def _extract_layer_dimensions(self, tensor_details: List[Dict[str, Any]]) -> List[int]:
         """
@@ -59,32 +59,40 @@ class VibrationAutoencoder(tf.keras.Model):
             List of layer dimensions in order
         """
         # First layer dimension (input)
-        logger.info(f"Extracting dimensions from tensor details: {tensor_details}")
-        
         input_shape = next(
             detail['shape'] for detail in tensor_details 
             if detail['name'] == 'input'
         )
-        logger.info(f"Found input shape: {input_shape}")
+        dimensions = [input_shape[2]]  # Get the sequence length (128)
         
-        dimensions = [input_shape[1]]  # Get the sequence length (128)
-        logger.info(f"Initial dimensions list: {dimensions}")
+        # Find all unique dimensions from MatMul operations
+        matmul_layers = []
+        for detail in tensor_details:
+            if 'MatMul' in detail['name']:
+                # Extract the layer number from the name
+                name_parts = detail['name'].split('/')
+                layer_num = next((part for part in name_parts if 'matmul' in part.lower()), '')
+                if layer_num:
+                    # Get the number from matmul_1, matmul_2 etc.
+                    num = int(layer_num.split('_')[-1]) if '_' in layer_num else 0
+                    matmul_layers.append((num, detail))
         
-        # Extract intermediate layer dimensions from matmul operations
-        matmul_layers = sorted(
-            [detail for detail in tensor_details if 'MatMul' in detail['name']],
-            key=lambda x: x['name']
-        )
-        logger.info(f"Found MatMul layers: {matmul_layers}")
+        # Sort by layer number to maintain order
+        matmul_layers.sort(key=lambda x: x[0])
         
-        for layer in matmul_layers:
+        # Build dimensions list
+        seen_dims = set([dimensions[0]])
+        for _, layer in matmul_layers:
             output_dim = layer['shape'][1]
-            logger.info(f"Processing layer {layer['name']} with output dim {output_dim}")
-            if output_dim not in dimensions:
+            if output_dim not in seen_dims:
                 dimensions.append(output_dim)
-                logger.info(f"Added dimension {output_dim}, current dimensions: {dimensions}")
+                seen_dims.add(output_dim)
         
-        logger.info(f"Final layer dimensions: {dimensions}")
+        # Add final output dimension if needed
+        if dimensions[0] not in seen_dims:
+            dimensions.append(dimensions[0])
+        
+        logger.info(f"Extracted dimensions: {dimensions}")
         return dimensions
 
     def call(self, inputs, training=None):
