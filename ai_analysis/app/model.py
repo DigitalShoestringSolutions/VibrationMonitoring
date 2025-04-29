@@ -48,6 +48,9 @@ class VibrationAutoencoder(tf.keras.Model):
         self.flatten = tf.keras.layers.Flatten()
         # Use Reshape layer with proper target shape
         self.reshape = tf.keras.layers.Reshape((self.layer_dims[-1], 1))
+        
+        # Create projection layer for shape adjustment
+        self.projection = tf.keras.layers.Dense(self.layer_dims[-1], name='projection_layer')
 
     def _extract_layer_dimensions(self, tensor_details: List[Dict[str, Any]]) -> List[int]:
         """
@@ -122,10 +125,14 @@ class VibrationAutoencoder(tf.keras.Model):
         for layer in self.decoder_layers:
             x = layer(x)
         
-        # Ensure the output has the correct number of elements
-        if tf.reduce_prod(tf.shape(x)) != batch_size * sequence_length:
-            # If the output doesn't match, project it to the correct size
-            x = tf.keras.layers.Dense(sequence_length)(x)
+        # Ensure the output has the correct number of elements using TensorFlow operations
+        output_size = tf.reduce_prod(tf.shape(x))
+        target_size = batch_size * sequence_length
+        x = tf.cond(
+            tf.not_equal(output_size, target_size),
+            lambda: self.projection(x),
+            lambda: x
+        )
         
         # Reshape output back to original dimensions
         x = tf.reshape(x, (batch_size, sequence_length, 1))

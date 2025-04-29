@@ -90,11 +90,25 @@ def train_model(self, data: Dict[str, Any]) -> Dict[str, Any]:
     try:
         logger.info(f"Starting model training with data: {data}")
         
+        # Query training data from InfluxDB
+        training_data = influx_service.query_vibration_data(
+            start_time=data['start_time'],
+            end_time=data['end_time']
+        )
+
+        if not training_data:
+            logger.warning("No training data found for the specified time range")
+            return {
+                'status': 'completed', 
+                'message': 'No data found for the specified time range',
+                'training_timestamp': time.strftime('%Y-%m-%dT%H:%M:%S%z')
+            }
+
         # Import training module only in worker context
         from .train import finetune_model
 
         # Perform model training
-        training_result = finetune_model(data)
+        training_result = finetune_model(training_data)
 
         logger.info(f"Model training completed: {training_result}")
 

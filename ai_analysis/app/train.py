@@ -6,6 +6,7 @@ import logging
 from .influx import influx_service
 from .model_management import model_manager
 from .model import VibrationAutoencoder, create_model_from_tensor_details
+import os
 
 
 # Configure logging
@@ -13,66 +14,34 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def prepare_training_data(data: Dict[str, Any]) -> np.ndarray:
+def prepare_training_data(data: Dict[str, Any], sequence_length: int) -> np.ndarray:
     """
     Prepare vibration data for training.
     
     Args:
-        data: Dictionary containing vibration data points
+        data: Dictionary influx data 
+        sequence_length: Length of each sequence
         
     Returns:
-        Numpy array of prepared training data
+        Numpy array of prepared training data in batch
     """
-    return
+    acceleration_values = np.array([point.get('acceleration', 0.0) for point in data])
+        
+    # Calculate number of complete sequences possible
+    total_points = len(acceleration_values)
+    num_sequences = total_points // sequence_length
+    
+    # Reshape into sequences
+    sequences = acceleration_values[:num_sequences * sequence_length].reshape(-1, sequence_length, 1)
+    
+    # Create dataset from pre-shaped sequences
+    dataset = tf.data.Dataset.from_tensor_slices(sequences)
+    dataset = dataset.shuffle(1000).batch(32).prefetch(tf.data.AUTOTUNE)
+    
+    logger.info(f"Dataset element spec: {dataset.element_spec}")
+    logger.info(f"Created dataset with {num_sequences} sequences of shape {sequences.shape}")
+    return dataset
 
-def finetune_model(model, train_data, val_data, epochs=10, batch_size=32):
-    """
-    Fine-tune the model on the training data.
-    
-    Args:
-        model: The pre-trained model
-        train_data: Training dataset
-        val_data: Validation dataset
-        epochs: Number of epochs to train
-        batch_size: Batch size for training
-        
-    Returns:
-        Fine-tuned model
-    """
-    # Create dummy input for model compilation
-    sample_input = tf.random.normal((batch_size, 128, 1))
-    
-    # Verify model output shape
-    sample_output = model(sample_input)
-    logger.info(f"Model input shape: {sample_input.shape}")
-    logger.info(f"Model output shape: {sample_output.shape}")
-    
-    if sample_input.shape != sample_output.shape:
-        raise ValueError(f"Model input shape {sample_input.shape} does not match output shape {sample_output.shape}")
-    
-    # Compile model
-    model.compile(
-        optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
-        loss='mse',
-        metrics=['mae']
-    )
-    
-    # Train model
-    history = model.fit(
-        train_data,
-        validation_data=val_data,
-        epochs=epochs,
-        batch_size=batch_size,
-        callbacks=[
-            tf.keras.callbacks.EarlyStopping(
-                monitor='val_loss',
-                patience=3,
-                restore_best_weights=True
-            )
-        ]
-    )
-    
-    return model, history
 
 def finetune_model(data: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -87,7 +56,7 @@ def finetune_model(data: Dict[str, Any]) -> Dict[str, Any]:
         Dictionary containing training results
     """
 
-    debug = True
+    debug = False
     try:
         logger.info("Starting model fine-tuning")
         
@@ -109,15 +78,18 @@ def finetune_model(data: Dict[str, Any]) -> Dict[str, Any]:
         logger.info(f"Output details: {output_details}")
         logger.info(f"Tensor details: {tensor_details}")
 
+        # get sequence length from tensor details
+        sequence_length = input_details[0]['shape'][2]
+        logger.info(f"Sequence length: {sequence_length}")
 
-
+        # Create model from tensor details
         model = create_model_from_tensor_details(tensor_details)
 
         # Load weights from the current model
         # First, create a dummy input to build the model
-        sample_input = tf.keras.Input(shape=(1,1,128))
+        sample_input = tf.keras.Input(shape=(1,1,sequence_length))
         model(sample_input)
-
+        
         # Extract weights from TFLite model
         for detail in tensor_details:
             if 'kernel' in detail['name'].lower() or 'bias' in detail['name'].lower():
@@ -133,40 +105,52 @@ def finetune_model(data: Dict[str, Any]) -> Dict[str, Any]:
 
         logger.info("Successfully loaded weights from current model")
 
+        # Prepare Data for Training
+        dataset = prepare_training_data(data, sequence_length)
 
-        if debug:
-            # Create sample sine wave input
-            t = np.linspace(0, 2*np.pi, 128)
-            sample_data = np.sin(t).reshape(-1, 128, 1)
-            logger.info(f"Sample data shape: {sample_data.shape}")
-            output_before = model(sample_data)
-            
-            # Create figure with two subplots
-            plt.figure(figsize=(12, 6))
-            
-            # Plot input vs output before weight loading
-            plt.subplot(2, 1, 1)
-            plt.plot(t, sample_data.squeeze(), label='Input')
-            plt.plot(t, output_before.numpy().squeeze(), label='Output')
-            plt.title('Model Input vs Output Before Loading Weights')
-            plt.legend()
-            plt.grid(True)
-            
-            # Plot input vs output after weight loading
-            plt.subplot(2, 1, 2)
-            output_after = model(sample_data)
-            plt.plot(t, sample_data.squeeze(), label='Input')
-            plt.plot(t, output_after.numpy().squeeze(), label='Output')
-            plt.title('Model Input vs Output After Loading Weights')
-            plt.legend()
-            plt.grid(True)
-            
-            plt.tight_layout()
-            plt.savefig('debug_output/model_io_comparison.png')
-            plt.close()
-            
-            logger.info("Saved input/output comparison plot to model_io_comparison.png")
 
+        # Compile the model
+        model.compile(optimizer='adam', loss='mean_squared_error')
+
+        # Train the model
+        history = model.fit(
+            dataset,
+            epochs=10
+        )
+
+        # Log training metrics
+        logger.info("Training metrics:")
+        for epoch, loss in enumerate(history.history['loss']):
+            logger.info(f"Epoch {epoch + 1}: loss = {loss:.4f}")
+        
+        final_loss = history.history['loss'][-1]
+        logger.info(f"Final training loss: {final_loss:.4f}")
+
+
+
+
+
+        # Save the model
+        temp_model_path = 'data/checkpoints/temp_model.tflite'
+        converter = tf.lite.TFLiteConverter.from_keras_model(model)
+        tflite_model = converter.convert()
+        with open(temp_model_path, 'wb') as f:
+            f.write(tflite_model)
+        # Save model with metadata using model manager
+        model_id = model_manager.save_model(
+            model_path=temp_model_path,
+            metrics={
+                'training_loss': final_loss,
+            },
+            params={
+                'sequence_length': sequence_length,
+                'epochs': 10
+            },
+            description="First attempt at fine-tuning model"
+        )
+        # Clean up temporary file
+        os.remove(temp_model_path)
+        logger.info(f"Saved model with ID: {model_id}")
 
         
 
