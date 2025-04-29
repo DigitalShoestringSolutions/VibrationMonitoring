@@ -108,7 +108,7 @@ def train_model(self, data: Dict[str, Any]) -> Dict[str, Any]:
         from .train import finetune_model
 
         # Perform model training
-        training_result = finetune_model(training_data)
+        training_result = finetune_model(training_data, data['start_time'], data['end_time'])
 
         logger.info(f"Model training completed: {training_result}")
 

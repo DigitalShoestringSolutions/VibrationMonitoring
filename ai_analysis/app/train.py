@@ -44,7 +44,7 @@ def prepare_training_data(data: Dict[str, Any], sequence_length: int) -> np.ndar
     return dataset
 
 
-def finetune_model(data: Dict[str, Any]) -> Dict[str, Any]:
+def finetune_model(data: Dict[str, Any], start_time: str, end_time: str) -> Dict[str, Any]:
     """
     Fine-tune the autoencoder model using new data.
     
@@ -80,12 +80,14 @@ def finetune_model(data: Dict[str, Any]) -> Dict[str, Any]:
         # logger.info(f"Tensor details: {tensor_details}")
 
         # get sequence length from tensor details
-        sequence_length = input_details[0]['shape'][2]
+        shape = input_details[0]['shape']
+        sequence_length = shape[3] if len(shape) == 4 else shape[2]
         logger.info(f"Sequence length: {sequence_length}")
 
         # Create model from tensor details
-        # model = create_model_from_tensor_details(tensor_details)
+        # model = create_model_from_tensor_details(tensor_details) # for dynamic model
         model = StaticAutoencoder()
+        
         # Load weights from the current model
         # First, create a dummy input to build the model
         sample_input = tf.keras.Input(shape=(1,1,sequence_length))
@@ -104,11 +106,11 @@ def finetune_model(data: Dict[str, Any]) -> Dict[str, Any]:
                         elif 'bias' in detail['name'].lower():
                             layer.bias.assign(tensor)
 
-        logger.info("Successfully loaded weights from current model")
-
+        logger.info(f"Successfully loaded weights from current model: {current_model['id']}")
+    
         # Prepare Data for Training
         dataset = prepare_training_data(data, sequence_length)
-
+        epochs = 30
 
         # Compile the model
         model.compile(optimizer='adam', loss='mean_squared_error')
@@ -116,7 +118,7 @@ def finetune_model(data: Dict[str, Any]) -> Dict[str, Any]:
         # Train the model
         history = model.fit(
             dataset,
-            epochs=10
+            epochs=epochs
         )
 
         # Log training metrics
@@ -127,7 +129,45 @@ def finetune_model(data: Dict[str, Any]) -> Dict[str, Any]:
         final_loss = history.history['loss'][-1]
         logger.info(f"Final training loss: {final_loss:.4f}")
 
+        # Debug Plots
+        if debug:
+            # Create figure with 2 subplots
+            fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 10))
+            
+            # Plot 1: Training Loss
+            ax1.plot(history.history['loss'], label='Training Loss')
+            ax1.set_title('Training Loss')
+            ax1.set_xlabel('Epoch')
+            ax1.set_ylabel('Loss')
+            ax1.legend()
 
+            # Plot 2: Sample Input/Output
+            # Get a sample batch from dataset
+            acceleration_values = np.array([point.get('acceleration', 0.0) for point in data])
+            x = acceleration_values[:128]
+            x = tf.reshape(x, (1, 128, 1))  # Reshape to match model input shape (batch_size, sequence_length, features)
+            # Get model prediction
+            logger.info(f"x shape: {x.shape}")
+            y_pred = model(x)
+            
+            # Plot sample input and output
+            sample_idx = 0  # Take first sample from batch
+            ax2.plot(x[sample_idx].numpy().flatten(), label='Input', alpha=0.7)
+            ax2.plot(y_pred[sample_idx].numpy().flatten(), label='Model Output', alpha=0.7)
+            ax2.set_title('Input vs Model Reconstruction')
+            ax2.set_xlabel('Time Step')
+            ax2.set_ylabel('Amplitude')
+            ax2.legend()
+
+            plt.tight_layout()
+            
+            # Save debug plot to file
+            debug_output_dir = 'debug_output'
+            os.makedirs(debug_output_dir, exist_ok=True)
+            plot_path = os.path.join(debug_output_dir, 'model_analysis.png')
+            plt.savefig(plot_path)
+            plt.close()
+            logger.info(f"Saved debug plots to {plot_path}")
 
 
 
@@ -145,7 +185,10 @@ def finetune_model(data: Dict[str, Any]) -> Dict[str, Any]:
             },
             params={
                 'sequence_length': str(sequence_length),
-                'epochs': 10
+                'epochs': str(epochs),
+                'start_time': start_time,
+                'end_time': end_time,
+                'previous_model_id': current_model['id']
             },
             description="First attempt at fine-tuning model"
         )
@@ -153,61 +196,12 @@ def finetune_model(data: Dict[str, Any]) -> Dict[str, Any]:
         os.remove(temp_model_path)
         logger.info(f"Saved model with ID: {model_id}")
 
-        
+        return {
+            'status': 'completed',
+            'message': 'Model fine-tuned successfully',
+            'model_id': model_id
+        }
 
-
-
-
-        
-        # # Query training data
-        # training_data = influx_service.query_vibration_data(
-        #     start_time=data['start_time'],
-        #     end_time=data['end_time']
-        # )
-        
-        # if not training_data:
-        #     raise ValueError("No training data available for the specified time range")
-            
-        # # Prepare data
-        # X_train = prepare_training_data(training_data)
-        
-        # Fine-tune model
-        # history = model.fit(
-        #     X_train,
-        #     X_train,
-        #     epochs=10,
-        #     batch_size=32,
-        #     validation_split=0.2,
-        #     verbose=1
-        # )
-        
-        # # Save fine-tuned model
-        # metrics = {
-        #     'final_loss': history.history['loss'][-1],
-        #     'final_val_loss': history.history['val_loss'][-1]
-        # }
-        
-        # model_id = model_manager.save_model(
-        #     model_path=model_path,
-        #     metrics=metrics,
-        #     params={
-        #         'epochs': 10,
-        #         'batch_size': 32,
-        #         'sequence_length': 128
-        #     },
-        #     description="Fine-tuned model"
-        # )
-        
-        # result = {
-        #     'status': 'completed',
-        #     'model_id': model_id,
-        #     'metrics': metrics,
-        #     'training_samples': len(X_train)
-        # }
-        
-        # logger.info(f"Model fine-tuning completed: {result}")
-        # return result
-        
     except Exception as e:
         logger.error(f"Error in model fine-tuning: {str(e)}")
         raise 

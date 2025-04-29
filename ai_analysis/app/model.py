@@ -104,15 +104,20 @@ class DynamicAutoencoder(tf.keras.Model):
         Forward pass of the model.
         
         Args:
-            inputs: Input tensor of shape (batch_size, sequence_length, 1)
+            inputs: Input tensor of shape (batch_size, 1, 1, sequence_length) or (batch_size, sequence_length, 1)
             training: Boolean indicating if in training mode
             
         Returns:
             Reconstructed output tensor of shape (batch_size, sequence_length, 1)
         """
+        # Handle 4D input from TFLite
+        if len(inputs.shape) == 4:
+            # Reshape from (batch, 1, 1, seq_len) to (batch, seq_len, 1)
+            inputs = tf.squeeze(inputs, axis=[1, 2])
+            inputs = tf.expand_dims(inputs, axis=-1)
+        
         # Store original shape
         batch_size = tf.shape(inputs)[0]
-        sequence_length = inputs.shape[1]
         
         # Flatten input
         x = self.flatten(inputs)
@@ -125,17 +130,8 @@ class DynamicAutoencoder(tf.keras.Model):
         for layer in self.decoder_layers:
             x = layer(x)
         
-        # Ensure the output has the correct number of elements using TensorFlow operations
-        output_size = tf.reduce_prod(tf.shape(x))
-        target_size = batch_size * sequence_length
-        x = tf.cond(
-            tf.not_equal(output_size, target_size),
-            lambda: self.projection(x),
-            lambda: x
-        )
-        
         # Reshape output back to original dimensions
-        x = tf.reshape(x, (batch_size, sequence_length, 1))
+        x = self.reshape(x)
         
         return x
 
