@@ -1,10 +1,11 @@
 import tensorflow as tf
 import numpy as np
+import matplotlib.pyplot as plt
 from typing import Dict, Any
 import logging
 from .influx import influx_service
 from .model_management import model_manager
-from .model import VibrationAutoencoder
+from .model import VibrationAutoencoder, create_model_from_tensor_details
 
 
 # Configure logging
@@ -24,6 +25,55 @@ def prepare_training_data(data: Dict[str, Any]) -> np.ndarray:
     """
     return
 
+def finetune_model(model, train_data, val_data, epochs=10, batch_size=32):
+    """
+    Fine-tune the model on the training data.
+    
+    Args:
+        model: The pre-trained model
+        train_data: Training dataset
+        val_data: Validation dataset
+        epochs: Number of epochs to train
+        batch_size: Batch size for training
+        
+    Returns:
+        Fine-tuned model
+    """
+    # Create dummy input for model compilation
+    sample_input = tf.random.normal((batch_size, 128, 1))
+    
+    # Verify model output shape
+    sample_output = model(sample_input)
+    logger.info(f"Model input shape: {sample_input.shape}")
+    logger.info(f"Model output shape: {sample_output.shape}")
+    
+    if sample_input.shape != sample_output.shape:
+        raise ValueError(f"Model input shape {sample_input.shape} does not match output shape {sample_output.shape}")
+    
+    # Compile model
+    model.compile(
+        optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
+        loss='mse',
+        metrics=['mae']
+    )
+    
+    # Train model
+    history = model.fit(
+        train_data,
+        validation_data=val_data,
+        epochs=epochs,
+        batch_size=batch_size,
+        callbacks=[
+            tf.keras.callbacks.EarlyStopping(
+                monitor='val_loss',
+                patience=3,
+                restore_best_weights=True
+            )
+        ]
+    )
+    
+    return model, history
+
 def finetune_model(data: Dict[str, Any]) -> Dict[str, Any]:
     """
     Fine-tune the autoencoder model using new data.
@@ -36,6 +86,8 @@ def finetune_model(data: Dict[str, Any]) -> Dict[str, Any]:
     Returns:
         Dictionary containing training results
     """
+
+    debug = True
     try:
         logger.info("Starting model fine-tuning")
         
@@ -57,10 +109,13 @@ def finetune_model(data: Dict[str, Any]) -> Dict[str, Any]:
         logger.info(f"Output details: {output_details}")
         logger.info(f"Tensor details: {tensor_details}")
 
-        model = VibrationAutoencoder(tensor_details)
+
+
+        model = create_model_from_tensor_details(tensor_details)
+
         # Load weights from the current model
         # First, create a dummy input to build the model
-        sample_input = tf.keras.Input(shape=(128, 1))
+        sample_input = tf.keras.Input(shape=(1,1,128))
         model(sample_input)
 
         # Extract weights from TFLite model
@@ -77,8 +132,40 @@ def finetune_model(data: Dict[str, Any]) -> Dict[str, Any]:
                             layer.bias.assign(tensor)
 
         logger.info("Successfully loaded weights from current model")
-        
-        model(sample_input)
+
+
+        if debug:
+            # Create sample sine wave input
+            t = np.linspace(0, 2*np.pi, 128)
+            sample_data = np.sin(t).reshape(-1, 128, 1)
+            logger.info(f"Sample data shape: {sample_data.shape}")
+            output_before = model(sample_data)
+            
+            # Create figure with two subplots
+            plt.figure(figsize=(12, 6))
+            
+            # Plot input vs output before weight loading
+            plt.subplot(2, 1, 1)
+            plt.plot(t, sample_data.squeeze(), label='Input')
+            plt.plot(t, output_before.numpy().squeeze(), label='Output')
+            plt.title('Model Input vs Output Before Loading Weights')
+            plt.legend()
+            plt.grid(True)
+            
+            # Plot input vs output after weight loading
+            plt.subplot(2, 1, 2)
+            output_after = model(sample_data)
+            plt.plot(t, sample_data.squeeze(), label='Input')
+            plt.plot(t, output_after.numpy().squeeze(), label='Output')
+            plt.title('Model Input vs Output After Loading Weights')
+            plt.legend()
+            plt.grid(True)
+            
+            plt.tight_layout()
+            plt.savefig('debug_output/model_io_comparison.png')
+            plt.close()
+            
+            logger.info("Saved input/output comparison plot to model_io_comparison.png")
 
 
         
