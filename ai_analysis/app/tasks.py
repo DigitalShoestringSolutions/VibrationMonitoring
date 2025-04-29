@@ -77,3 +77,30 @@ def process_vibration_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
     except Exception as exc:
         logger.error(f"Error in vibration analysis: {str(exc)}")
         self.retry(exc=exc, countdown=60)  # Retry after 1 minute
+
+
+@celery.task(bind=True, max_retries=3)
+def train_model(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Fine tune a model
+
+    Args:
+        data: start_time, end_time
+    """
+    try:
+        logger.info(f"Starting model training with data: {data}")
+        
+        # Import training module only in worker context
+        from .train import finetune_model
+
+        # Perform model training
+        training_result = finetune_model(data)
+
+        logger.info(f"Model training completed: {training_result}")
+
+        return training_result
+    
+    except Exception as exc:
+        logger.error(f"Error in model training: {str(exc)}")
+        self.retry(exc=exc, countdown=60)
+        

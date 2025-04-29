@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .tasks import process_vibration_data
+from .tasks import process_vibration_data, train_model
 from .influx import influx_service
 
 app = FastAPI()
@@ -7,6 +7,11 @@ app = FastAPI()
 @app.post("/analyze")
 async def trigger_analysis(data: dict):
     task = process_vibration_data.delay(data)
+    return {"task_id": task.id}
+
+@app.post("/train")
+async def trigger_training(data: dict):
+    task = train_model.delay(data)
     return {"task_id": task.id}
 
 @app.on_event("shutdown")
