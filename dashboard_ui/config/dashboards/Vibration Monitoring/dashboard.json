@@ -86,8 +86,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 9,
+        "w": 24,
         "x": 0,
         "y": 0
       },
@@ -110,142 +110,12 @@
             "type": "influxdb",
             "uid": "influxdb"
           },
-          "query": "from(bucket: \"vibration_monitoring\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"socket_listener\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
+          "query": "from(bucket: \"vibration_monitoring\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vibration_processed\")\n  |> filter(fn: (r) => r[\"_field\"] == \"amplitude\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
           "refId": "A"
         }
       ],
       "title": "Accelerometer Data",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "influxdb"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 150,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "hertz"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 4,
-        "x": 12,
-        "y": 0
-      },
-      "id": 10,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "9.4.7",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "influxdb"
-          },
-          "query": "from(bucket: \"vibration_monitoring\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vibration_reading\")\n  |> filter(fn: (r) => r[\"_field\"] == \"peakFrequency\")\n  |> filter(fn: (r) => r[\"id\"] == \"${machine}\")\n\n  ",
-          "refId": "A"
-        }
-      ],
-      "title": "Peak Frequency | ${machine}",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "influxdb"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 150,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 50
-              }
-            ]
-          },
-          "unit": "celsius"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 18,
-        "w": 8,
-        "x": 16,
-        "y": 0
-      },
-      "id": 11,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "9.4.7",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "influxdb"
-          },
-          "query": "from(bucket: \"vibration_monitoring\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vibration_reading\")\n  |> filter(fn: (r) => r[\"_field\"] == \"temperature\")\n  |> filter(fn: (r) => r[\"id\"] == \"${machine}\")\n\n  ",
-          "refId": "A"
-        }
-      ],
-      "title": "Temperature | ${machine}",
-      "type": "stat"
     },
     {
       "datasource": {
@@ -272,6 +142,9 @@
               "viz": false
             },
             "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -301,15 +174,15 @@
               }
             ]
           },
-          "unit": "accMS2"
+          "unit": "none"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 9,
-        "w": 12,
+        "w": 24,
         "x": 0,
-        "y": 8
+        "y": 9
       },
       "id": 2,
       "options": {
@@ -330,11 +203,11 @@
             "type": "influxdb",
             "uid": "influxdb"
           },
-          "query": "from(bucket: \"vibration_monitoring\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vibration_reading\")\n  |> filter(fn: (r) => r[\"_field\"] == \"acceleration\")\n    |> filter(fn: (r) => r[\"id\"] == \"${machine}\")\n\n  ",
+          "query": "from(bucket: \"vibration_monitoring\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"analysis_results\")\n  |> filter(fn: (r) => r[\"_field\"] == \"mean_reconstruction_loss\" or r[\"_field\"] == \"min_reconstruction_loss\" or r[\"_field\"] == \"max_reconstruction_loss\")\n  |> group(columns: [\"_field\"])  // Group by field (mean, min, max)",
           "refId": "A"
         }
       ],
-      "title": "RMS Acceleration | ${machine}",
+      "title": "Reconstruction Loss",
       "type": "timeseries"
     },
     {
@@ -361,7 +234,7 @@
         "h": 9,
         "w": 16,
         "x": 0,
-        "y": 17
+        "y": 18
       },
       "id": 9,
       "options": {
@@ -450,13 +323,13 @@
     ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Vibration & Temperature Dashboard",
+  "title": "Vibration Dashboard",
   "uid": "70aiGq34k",
-  "version": 13,
+  "version": 15,
   "weekStart": ""
 }

@@ -5,7 +5,7 @@ var measurement = 'socket_listener'
 var window_size = 10s
 var output_measurement = 'vibration_processed'
 
-var constant_value = 11.39  // The constant value you want to subtract from each data point
+var constant_value = 16.20 // The constant value you want to subtract from each data point
 
 stream
     // Source data
