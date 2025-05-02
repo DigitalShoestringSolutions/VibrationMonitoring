@@ -1,0 +1,17 @@
+dbrp "vibration_monitoring"."autogen"
+
+var window_size = 10s
+var measurement = 'socket_listener'
+var output_measurement = 'offset_value'
+
+batch
+    |query('SELECT value FROM "vibration_monitoring"."autogen"."socket_listener"')
+        .period(window_size)
+        .every(window_size)
+    |mean('value')
+        .as('mean_value')
+    |influxDBOut()
+        .database('vibration_monitoring')
+        .retentionPolicy('autogen')
+        .measurement(output_measurement)
+        .tag('processed_by', 'kapacitor_etl_batch')

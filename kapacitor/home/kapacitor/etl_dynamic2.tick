@@ -1,0 +1,67 @@
+dbrp "vibration_monitoring"."autogen"
+
+var measurement = 'socket_listener'
+var offset_measurement = 'offset_value'
+var output_measurement = 'vibration_processed'
+
+// Main data stream
+var acc = stream
+    |from()
+        .measurement(measurement)
+    |log()
+        .prefix('ACC_INPUT: ')
+        .level('DEBUG')
+    |window()
+        .period(10s)
+        .every(10s)
+    |last('value')
+    |log()
+        .prefix('ACC_WINDOWED: ')
+        .level('DEBUG')
+    |eval(lambda: "last")
+        .as('acc_value')
+    |log()
+        .prefix('ACC_VALUE: ')
+        .level('DEBUG')
+
+// Offset value stream
+var offset = stream
+    |from()
+        .measurement(offset_measurement)
+    |log()
+        .prefix('OFFSET_INPUT: ')
+        .level('DEBUG')
+    |window()
+        .period(1m)
+        .every(10s)
+    |last('value')
+    |log()
+        .prefix('OFFSET_WINDOWED: ')
+        .level('DEBUG')
+    |eval(lambda: "last")
+        .as('offset_value')
+    |log()
+        .prefix('OFFSET_VALUE: ')
+        .level('DEBUG')
+
+// Join the two streams with tolerance
+var joined = acc
+    |join(offset)
+        .as('acc', 'offset')
+        .tolerance(1m)
+    |log()
+        .prefix('JOINED_DATA: ')
+        .level('DEBUG')
+
+// Calculate corrected value
+joined
+    |eval(lambda: "acc.acc_value" - "offset.offset_value")
+        .as('calibrated_value')
+    |log()
+        .prefix('CALIBRATED_VALUE: ')
+        .level('DEBUG')
+    |influxDBOut()
+        .database('vibration_db')
+        .retentionPolicy('autogen')
+        .measurement(output_measurement)
+        .tag('processed_by', 'kapacitor_etl_join')

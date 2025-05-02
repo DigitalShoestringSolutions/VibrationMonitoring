@@ -1,0 +1,39 @@
+dbrp "vibration_db"."autogen"
+dbrp "vibration_monitoring"."autogen"
+
+
+var measurement = 'socket_listener'
+var output_measurement = 'vibration_processed'
+var window_size = 10s
+
+// Raw stream (every incoming point)
+var raw = stream
+    |from()
+        .measurement(measurement)
+    |eval(lambda: "value")
+        .as('raw_value')
+
+// Calibration stream (mean over window)
+var calibration = stream
+    |from()
+        .measurement(measurement)
+    |window()
+        .period(window_size)
+        .every(window_size)
+    |mean('value')
+        .as('calibration_value')
+
+// Join both streams on time
+raw
+    |join(calibration)
+        .as('raw', 'cal')
+        .tolerance(20s)  // Adjust depending on window size and expected delay
+        .fill('previous')
+    |eval(lambda: "raw.raw_value" - "cal.calibration_value")
+        .as('amplitude')
+    |influxDBOut()
+        .database('vibration_monitoring')
+        .retentionPolicy('autogen')
+        .measurement(output_measurement)
+        .tag('processed_by', 'kapacitor_etl')
+        .tag('version', '1.0')

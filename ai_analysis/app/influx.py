@@ -95,14 +95,16 @@ class InfluxDBService:
                 Point(analysis_measurement)
                 .tag("analysis_model", result['analysis_model'])
                 .tag("status", result['status'])
-                .tag("timestamp", result['analysis_timestamp'])
-                .field("data_points_analyzed", result['data_points_analyzed'])
+                .tag("analyis_timestamp", result['analysis_timestamp'])
+                .tag("num_batches_processed", result['num_batches_processed'])
+                .tag("data_points_analyzed", result['data_points_analyzed'])
+                .tag("task_id", result['task_id'])
+                .tag("data_start_time", result['data_start_time'])
+                .tag("data_end_time", result['data_end_time'])
                 .field("max_reconstruction_loss", result['max_reconstruction_loss'])
                 .field("min_reconstruction_loss", result['min_reconstruction_loss'])
                 .field("mean_reconstruction_loss", result['mean_reconstruction_loss'])
-                .field("num_batches_processed", result['num_batches_processed'])
-                .field("data_start_time", result['data_start_time'])
-                .field("data_end_time", result['data_end_time'])
+                
             )
             
             # Write the point to InfluxDB

@@ -65,6 +65,7 @@ def process_vibration_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
             'analysis_timestamp': time.strftime('%Y-%m-%dT%H:%M:%S%z'),
             'data_start_time': data['start_time'],
             'data_end_time': data['end_time'],
+            'task_id': self.request.id,
         }
         
         logger.info(f"Analysis completed: {result}")
@@ -109,7 +110,7 @@ def train_model(self, data: Dict[str, Any]) -> Dict[str, Any]:
 
         # Perform model training
         training_result = finetune_model(training_data, data['start_time'], data['end_time'])
-
+        
         logger.info(f"Model training completed: {training_result}")
 
         return training_result
