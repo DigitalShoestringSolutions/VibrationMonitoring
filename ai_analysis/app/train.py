@@ -26,7 +26,8 @@ def prepare_training_data(data: Dict[str, Any], sequence_length: int) -> np.ndar
         Numpy array of prepared training data in batch
     """
     acceleration_values = np.array([point.get('acceleration', 0.0) for point in data])
-        
+
+    acceleration_values = acceleration_values - np.mean(acceleration_values) # Center the data around 0
     # Calculate number of complete sequences possible
     total_points = len(acceleration_values)
     num_sequences = total_points // sequence_length
@@ -195,6 +196,9 @@ def finetune_model(data: Dict[str, Any], start_time: str, end_time: str) -> Dict
         # Clean up temporary file
         os.remove(temp_model_path)
         logger.info(f"Saved model with ID: {model_id}")
+
+        # Update the current model in the model manager
+        model_manager.set_current_model(model_id)
 
         return {
             'status': 'completed',

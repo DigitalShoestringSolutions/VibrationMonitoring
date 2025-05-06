@@ -104,6 +104,7 @@ class InfluxDBService:
                 .field("max_reconstruction_loss", result['max_reconstruction_loss'])
                 .field("min_reconstruction_loss", result['min_reconstruction_loss'])
                 .field("mean_reconstruction_loss", result['mean_reconstruction_loss'])
+                .time(result['data_start_time'])
                 
             )
             

@@ -1,4 +1,6 @@
 **/data/*
+!data/checkpoints/
+!data/checkpoints/**
 !**/.gitkeep
 start_local.sh
 *.DS_Store

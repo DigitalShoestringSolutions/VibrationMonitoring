@@ -74,6 +74,11 @@ def analyze_vibration_data(data: Dict[str, Any]) -> Dict[str, Any]:
         
         # Extract acceleration values and convert to numpy array
         acceleration_values = np.array([point.get('acceleration', 0.0) for point in data])
+
+        # Center the acceleration values around 0 by subtracting the mean
+        acceleration_mean = np.mean(acceleration_values)
+        acceleration_values = acceleration_values - acceleration_mean
+        logger.info(f"Centered data by subtracting mean: {acceleration_mean:.4f}")
         
         # Calculate number of complete batches possible
         total_points = len(acceleration_values)
