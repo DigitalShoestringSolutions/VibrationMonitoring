@@ -1,6 +1,5 @@
-version: "2"
-
 services:
+
     mqtt_broker:
         extends:
             file: mqtt_broker/app.yml
@@ -14,6 +13,7 @@ services:
             internal:
                 aliases:
                     - mqtt.docker.local
+
     timeseries-db:
         extends:
             file: timeseries_sds/app.yml
@@ -29,6 +29,7 @@ services:
         restart: unless-stopped
         depends_on:
             - "mqtt_broker"
+
     timeseries-db-input:
         extends:
             file: timeseries_sds/app.yml
@@ -45,6 +46,7 @@ services:
         depends_on:
             - "timeseries-db"
             - "mqtt_broker"
+
     dashboard:
         extends:
             file: dashboard_ui/app.yml
@@ -61,7 +63,6 @@ services:
         depends_on:
             - "mqtt_broker"
 
-services:
     http_mqtt_bridge:
         extends:
             file: http_mqtt_bridge/app.yml
