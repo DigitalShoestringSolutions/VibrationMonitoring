@@ -2,7 +2,7 @@
 	#list of constants here that can be used in mqtt topic template
 
 [mqtt]
-    broker = "192.168.56.110"
+    broker = "mqtt.docker.local"
     port = 1883   #common mqtt ports are 1883 and 8883
     base_topic_template = ""
 
