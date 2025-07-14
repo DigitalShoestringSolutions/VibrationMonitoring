@@ -1,0 +1,17 @@
+[constants]
+	#list of constants here that can be used in mqtt topic template
+
+[mqtt]
+    broker = "192.168.56.110"
+    port = 1883   #common mqtt ports are 1883 and 8883
+    base_topic_template = ""
+
+    #reconnection characteristics
+    # start: timeout = initial,
+    # if timeout < limit then
+    #   timeout = timeout*backoff
+    # else
+    #   timeout = limit
+    reconnect.initial = 5 # seconds
+    reconnect.backoff = 2 # multiplier
+    reconnect.limit = 60 # seconds

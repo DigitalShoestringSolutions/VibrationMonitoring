@@ -61,6 +61,22 @@ services:
         depends_on:
             - "mqtt_broker"
 
+services:
+    http_mqtt_bridge:
+        extends:
+            file: http_mqtt_bridge/app.yml
+            service: app
+        networks:
+            internal:
+                aliases:
+                    - http_mqtt_bridge.docker.local
+        logging:
+                driver: syslog
+                options:
+                        tag: docker-http_mqtt_bridge
+        restart: unless-stopped
+
+
 networks:
      internal:
          name: shoestring-internal
