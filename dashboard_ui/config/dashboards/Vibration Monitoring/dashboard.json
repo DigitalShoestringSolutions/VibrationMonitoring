@@ -88,7 +88,7 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 12,
+        "w": 18,
         "x": 0,
         "y": 0
       },
@@ -150,8 +150,8 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 4,
-        "x": 12,
+        "w": 6,
+        "x": 18,
         "y": 0
       },
       "id": 10,
@@ -190,71 +190,6 @@
       },
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 150,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 50
-              }
-            ]
-          },
-          "unit": "celsius"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 18,
-        "w": 8,
-        "x": 16,
-        "y": 0
-      },
-      "id": 11,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "9.4.7",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "influxdb"
-          },
-          "query": "from(bucket: \"vibration_monitoring\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vibration_reading\")\n  |> filter(fn: (r) => r[\"_field\"] == \"temperature\")\n  |> filter(fn: (r) => r[\"id\"] == \"${machine}\")\n\n  ",
-          "refId": "A"
-        }
-      ],
-      "title": "Temperature | ${machine}",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "influxdb"
-      },
-      "fieldConfig": {
-        "defaults": {
           "custom": {
             "hideFrom": {
               "legend": false,
@@ -270,7 +205,7 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 16,
+        "w": 24,
         "x": 0,
         "y": 9
       },
@@ -336,9 +271,10 @@
     "list": [
       {
         "current": {
-          "selected": true,
-          "text": "machine_1",
-          "value": "machine_1"
+          "isNone": true,
+          "selected": false,
+          "text": "None",
+          "value": ""
         },
         "datasource": {
           "type": "influxdb",
@@ -365,8 +301,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Vibration & Temperature Dashboard",
+  "title": "Vibration Dashboard",
   "uid": "70aiGq34k",
-  "version": 11,
+  "version": 14,
   "weekStart": ""
 }
