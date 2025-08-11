@@ -299,7 +299,7 @@
           "show": true
         },
         "rowsFrame": {
-          "layout": "ge"
+          "layout": "unknown"
         },
         "tooltip": {
           "show": true,
