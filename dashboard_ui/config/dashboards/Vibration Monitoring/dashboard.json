@@ -129,7 +129,6 @@
             "mode": "thresholds"
           },
           "mappings": [],
-          "max": 150,
           "min": 0,
           "thresholds": {
             "mode": "absolute",
@@ -281,7 +280,6 @@
         "color": {
           "exponent": 0.5,
           "fill": "dark-orange",
-          "max": 3000,
           "min": 0,
           "mode": "scheme",
           "reverse": false,
@@ -299,7 +297,7 @@
           "show": true
         },
         "rowsFrame": {
-          "layout": "ge"
+          "layout": "unknown"
         },
         "tooltip": {
           "show": true,
@@ -367,6 +365,6 @@
   "timezone": "",
   "title": "Vibration & Temperature Dashboard",
   "uid": "70aiGq34k",
-  "version": 11,
+  "version": 2,
   "weekStart": ""
 }
