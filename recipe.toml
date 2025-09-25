@@ -41,7 +41,7 @@ recipe_vsn = "1.0.0"
 [infrastructure.platform_link]
     source = "plink"
     containers = ["link"]
-    ports.link.ui = 80
+    ports.link.ui = 5000
     alias.link = "platform_link"
 
 
