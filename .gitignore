@@ -5,7 +5,6 @@ __pycache__/
 # Explicit exclusions
 data/**
 assembled/**
-console_log.html
 
 # Explicit inclusions
 !**/.gitkeep
