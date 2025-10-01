@@ -1,0 +1,12 @@
+solution_type = "vibration_monitoring"
+solution_version = "v1.0.0"
+# Is there any way the above could be extracted from the solution's top level recipe.toml?
+# If not it will be hard to keep manually consistent.
+# For now (plink v1.0.0) this is required, will remove this when plink v bumped.
+
+# These are the defaults for these settings.
+# they can be modified using the control panel 
+# (changes are saved in the database in /data)
+[default_transmitted_stats]
+    running = true
+    usage = false

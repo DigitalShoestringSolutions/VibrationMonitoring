@@ -1,0 +1,66 @@
+# Recipe format compatibility check i.e. what versions of the assembler does this recipe work with? 
+recipe_vsn = "1.0.0"
+
+# About the solution as a whole
+[solution]
+    name = "Vibration Monitoring"
+    slug = "vibration_monitoring"
+    version = "1.0.0"
+    description = "Shoestring Vibration Monitoring Starter Solution"
+
+# Service module instances present in this solution
+[service_module.data-storage]
+    source = "data_storage"
+    containers = ["influx","telegraf"]
+    ports.influx.ui = 8086
+    alias.influx = "timeseries-db"
+    template.log_level = "info"
+
+[service_module.dashboards]
+    source = "grafana"
+    containers = ["grafana"]
+    ports.grafana.ui = 3000
+    template.disable_sanitise_html = "true"
+
+# Infrastructure modules present in this solution
+[infrastructure.mqtt-broker]
+    source = "mqtt_broker"
+    containers = ["broker"]
+    ports.broker.tcp = 1883
+    ports.broker.websocket = 9001
+    alias.broker = "mqtt"
+
+[infrastructure.logging]
+    source = "logging"
+    containers = ["alloy","loki"]
+    ports.loki.api = 3100
+    alias.loki = "loki"
+    alias.alloy = "alloy"
+    volume.alloy.docker_sock = "/var/run/docker.sock"
+
+[infrastructure.platform_link]
+    source = "plink"
+    containers = ["link"]
+    ports.link.ui = 5000
+    alias.link = "platform_link"
+
+
+# Available module code sources which can feed the above instances
+[source.sensing]
+    git.path = "sm_SensingDC"
+    git.tag = "v1.0.0"
+[source.data_storage]
+    git.path = "sm_timeseries_db"
+    git.tag = "v2.0.0"
+[source.grafana]
+    git.path = "sm_grafana_ui"
+    git.tag = "v2.0.0"
+[source.mqtt_broker]
+    git.path = "sm_mqtt_broker"
+    git.tag = "v2.0.0"
+[source.logging]
+    git.path = "Logging"
+    git.tag = "v1.0.0"
+[source.plink]
+    git.path = "PlatformLink"
+    git.tag = "v1.0.0"
